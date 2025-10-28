@@ -16,6 +16,7 @@
             font-family: 'EB Garamond', 'Garamond', serif;
             line-height: 1.6;
             color: #1f1f1f;
+            overflow-x: hidden;
         }
 
         /* Header & Navigation */
@@ -29,54 +30,116 @@
             transition: transform 0.3s ease;
         }
 
-        body.hide-header header {
-            transform: translateY(-100%);
-        }
-
-        nav {
+        .ss-header__inner {
             max-width: 1200px;
             margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             padding: 0.35rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
         }
 
-        .logo {
+        .ss-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
             font-size: 1.8rem;
-            font-weight: bold;
+            font-weight: 700;
             color: #d9d9d9;
             text-decoration: none;
         }
-        .logo img {
+        .ss-logo img {
             height: 4rem;
             display: block;
         }
 
-        nav ul {
+        .ss-nav {
+            display: flex;
+            align-items: center;
+        }
+        .ss-nav__list {
             display: flex;
             list-style: none;
+            gap: 1.25rem;
         }
-        .menu-toggle {
+        .ss-nav__close {
+            display: none;
+            margin-bottom: 1.5rem;
+            padding: 0.6rem 1.25rem;
+            border: 1px solid rgba(255,255,255,0.35);
+            border-radius: 999px;
+            background: transparent;
+            color: #ffffff;
+            font: inherit;
+            font-weight: 700;
+            align-items: center;
+            gap: 0.65rem;
+            cursor: pointer;
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .ss-nav__close:hover,
+        .ss-nav__close:focus-visible {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.5);
+        }
+        .ss-nav__link {
+            display: inline-block;
+            padding: 0.45rem 1.25rem;
+            border-radius: 999px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #ffffff;
+            text-decoration: none;
+            transition: background 0.3s, color 0.3s;
+            background: rgba(255,255,255,0.12);
+        }
+        .ss-nav__link:hover,
+        .ss-nav__link:focus-visible {
+            background: rgba(255,255,255,0.25);
+            color: #ffffff;
+        }
+        .ss-nav-toggle {
             display: none;
             align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
+            gap: 0.65rem;
             padding: 0.5rem 1rem;
+            border-radius: 999px;
             font: inherit;
             color: #ffffff;
             background: transparent;
             border: 1px solid rgba(255,255,255,0.35);
-            border-radius: 999px;
             cursor: pointer;
             transition: background 0.3s, border-color 0.3s;
         }
-        .menu-toggle:hover,
-        .menu-toggle:focus-visible {
+        .ss-nav-toggle:hover,
+        .ss-nav-toggle:focus-visible {
             background: rgba(255,255,255,0.2);
             border-color: rgba(255,255,255,0.5);
         }
-        .nav-backdrop {
+        .ss-nav-toggle__icon {
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+        }
+        .ss-nav-toggle__icon span {
+            width: 22px;
+            height: 2px;
+            background: currentColor;
+            border-radius: 999px;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+        body.ss-nav-open .ss-nav-toggle__icon span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        body.ss-nav-open .ss-nav-toggle__icon span:nth-child(2) {
+            opacity: 0;
+        }
+        body.ss-nav-open .ss-nav-toggle__icon span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+        .ss-nav-backdrop {
             display: none;
             position: fixed;
             inset: 0;
@@ -86,27 +149,12 @@
             transition: opacity 0.3s ease;
             z-index: 1090;
         }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            transition: color 0.3s;
-            font-weight: 500;
+        body.ss-nav-open .ss-nav-backdrop {
+            opacity: 1;
+            pointer-events: auto;
         }
-        .nav-button {
-            display: inline-block;
-            padding: 0.45rem 1.25rem;
-            border-radius: 999px;
-            background: transparent;
-            border: none;
-            white-space: nowrap;
-            font-size: 1rem;
-        }
-        .nav-button:hover,
-        .nav-button:focus-visible {
-            color: #ffffff;
-            background: rgba(255,255,255,0.25);
-            border: none;
+        body.ss-nav-open {
+            overflow: hidden;
         }
 
         /* Hero Section */
@@ -311,11 +359,18 @@
             font-size: 1.1rem;
         }
 
-        .contact-info p {
-            margin-bottom: 1.5rem;
+        .contact-info .contact-link {
             display: flex;
             align-items: center;
             gap: 1rem;
+            margin-bottom: 1.5rem;
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .contact-info .contact-link:hover,
+        .contact-info .contact-link:focus-visible {
+            color: #e0e0e0;
         }
 
         .contact-icon {
@@ -350,6 +405,7 @@
             border-radius: 50px;
             font-size: 1.1rem;
             font-weight: bold;
+            font-family: inherit;
             cursor: pointer;
             transition: all 0.3s;
         }
@@ -373,80 +429,52 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            nav ul {
-                flex-direction: column;
+            .ss-nav-toggle {
+                display: inline-flex;
+            }
+            .ss-header__inner {
+                padding: 0.35rem 1.5rem;
                 gap: 1rem;
             }
-
-            .menu-toggle {
-                display: inline-flex;
+            .ss-logo img {
+                height: 3.25rem;
             }
-            nav ul {
+            .ss-nav {
                 position: fixed;
                 top: 0;
                 bottom: 0;
                 left: 0;
                 width: min(260px, 75vw);
-                padding: 6rem 1.75rem 2rem;
-                flex-direction: column;
-                gap: 1.5rem;
-                background: rgba(18,18,18,0.95);
-                box-shadow: 6px 0 20px rgba(0,0,0,0.35);
+                padding: 4.5rem 3rem 2rem;
+                background: rgba(18,18,18);
+                box-shadow: 6px 0 20px rgba(0,0,0,0.35), 0 0 28px rgba(255,255,255,0.25);
                 transform: translateX(-110%);
                 transition: transform 0.3s ease;
                 z-index: 1100;
-            }
-            .nav-backdrop {
-                display: block;
-            }
-            body.nav-condensed .menu-toggle {
-                display: inline-flex;
-            }
-
-            body.nav-condensed nav ul {
-                position: fixed;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                width: min(260px, 75vw);
-                padding: 6rem 1.75rem 2rem;
                 flex-direction: column;
-                gap: 1.5rem;
-                background: rgba(18,18,18,0.95);
-                box-shadow: 6px 0 20px rgba(0,0,0,0.35);
-                transform: translateX(-110%);
-                transition: transform 0.3s ease;
-                z-index: 1100;
+                align-items: stretch;
             }
-
-            body.nav-condensed .nav-backdrop {
-                display: block;
-            }
-
-            body.nav-open nav ul {
+            body.ss-nav-open .ss-nav {
                 transform: translateX(0);
             }
-
-            body.nav-open .nav-backdrop {
-                opacity: 1;
-                pointer-events: auto;
+            .ss-nav__list {
+                flex-direction: column;
+                gap: 1.5rem;
+                margin-top: 3rem;
             }
-            nav ul li {
-                width: 100%;
+            .ss-nav__close {
+                display: inline-flex;
+                position: absolute;
+                top: 1.5rem;
+                right: 1.5rem;
+                margin: 0;
             }
-            nav ul li a {
+            .ss-nav__link {
                 width: 100%;
                 text-align: center;
             }
-            .hero-content h1 {
-                font-size: 2rem;
-            }
-            .about-content,
-            .contact-grid {
-                grid-template-columns: 1fr;
-            }
-            .services-grid {
-                grid-template-columns: 1fr;
+            .ss-nav-backdrop {
+                display: block;
             }
         }
 
@@ -535,26 +563,77 @@
             .slide-nav-left,
             .slide-nav-right { width: 24%; }
         }
+        @media (max-width: 600px) {
+            section {
+                padding: 3rem 1.5rem;
+            }
+            .hero {
+                min-height: 70vh;
+                padding: 6rem 1.5rem 5rem;
+                background-attachment: scroll;
+            }
+            .hero-content h1 {
+                font-size: 2.4rem;
+            }
+            .hero-content p {
+                font-size: 1.1rem;
+            }
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .about-image {
+                height: 260px;
+            }
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+            .mySlides img {
+                height: 240px;
+            }
+            h2 {
+                font-size: 2rem;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Header -->
     <header>
-        <nav>
-            <a href="#" class="logo"><img src="images/logo.png" alt="Élégance Coiffure"></a>
-            <button class="menu-toggle" aria-expanded="false" aria-controls="primary-menu">
-                ☰ Menu
+        <div class="ss-header__inner">
+            <a href="#accueil" class="ss-logo"><img src="images/logo.png" alt="Élégance Coiffure"></a>
+            <button class="ss-nav-toggle" type="button" aria-expanded="false" aria-controls="primary-menu">
+                <span class="ss-nav-toggle__icon" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+                <span class="ss-nav-toggle__label">Menu</span>
             </button>
-            <div class="nav-backdrop" aria-hidden="true"></div>
-            <ul id="primary-menu">
-                <li><a class="nav-button" href="#accueil">Accueil</a></li>
-                <li><a class="nav-button" href="#apropos">À propos</a></li>
-                <li><a class="nav-button" href="#services">Services</a></li>
-                <li><a class="nav-button" href="#galerie">Nos réalisations</a></li>
-                <li><a class="nav-button" href="#horaires">Horaires</a></li>
-                <li><a class="nav-button" href="#contact">Contact</a></li>
-            </ul>
-        </nav>
+            <div class="ss-nav-backdrop" aria-hidden="true"></div>
+            <nav id="primary-menu" class="ss-nav" role="navigation">
+                <button type="button" class="ss-nav__close">
+                    <span class="ss-nav-toggle__icon" aria-hidden="true">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                    Fermer
+                </button>
+                <ul class="ss-nav__list">
+                    <li><a class="ss-nav__link" href="#accueil">Accueil</a></li>
+                    <li><a class="ss-nav__link" href="#horaires">Horaires</a></li>
+                    <li><a class="ss-nav__link" href="#apropos">À propos</a></li>
+                    <li><a class="ss-nav__link" href="#services">Services</a></li>
+                    <li><a class="ss-nav__link" href="#galerie">Nos réalisations</a></li>
+                    <li><a class="ss-nav__link" href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
     <!-- Hero Section -->
@@ -563,6 +642,41 @@
             <h1>Élégance Coiffure</h1>
             <p>Votre salon de coiffure de confiance à Genève.</p>
             <a href="#contact" class="btn">Prendre Rendez-vous</a>
+        </div>
+    </section>
+
+    <!-- Horaires -->
+    <section id="horaires">
+        <h2>Horaires d'Ouverture</h2>
+        <div class="horaires-grid">
+            <div class="horaire-item">
+                <span class="jour">Lundi</span>
+                <span class="heures">Fermé</span>
+            </div>
+            <div class="horaire-item">
+                <span class="jour">Mardi</span>
+                <span class="heures">09:00 - 18:30</span>
+            </div>
+            <div class="horaire-item">
+                <span class="jour">Mercredi</span>
+                <span class="heures">09:00 - 18:30</span>
+            </div>
+            <div class="horaire-item">
+                <span class="jour">Jeudi</span>
+                <span class="heures">09:00 - 20:00</span>
+            </div>
+            <div class="horaire-item">
+                <span class="jour">Vendredi</span>
+                <span class="heures">09:00 - 20:00</span>
+            </div>
+            <div class="horaire-item">
+                <span class="jour">Samedi</span>
+                <span class="heures">08:00 - 17:00</span>
+            </div>
+            <div class="horaire-item">
+                <span class="jour">Dimanche</span>
+                <span class="heures">Fermé</span>
+            </div>
         </div>
     </section>
 
@@ -653,50 +767,21 @@
         </div>
     </section>
 
-    <!-- Horaires -->
-    <section id="horaires">
-        <h2>Horaires d'Ouverture</h2>
-        <div class="horaires-grid">
-            <div class="horaire-item">
-                <span class="jour">Lundi</span>
-                <span class="heures">Fermé</span>
-            </div>
-            <div class="horaire-item">
-                <span class="jour">Mardi</span>
-                <span class="heures">09:00 - 18:30</span>
-            </div>
-            <div class="horaire-item">
-                <span class="jour">Mercredi</span>
-                <span class="heures">09:00 - 18:30</span>
-            </div>
-            <div class="horaire-item">
-                <span class="jour">Jeudi</span>
-                <span class="heures">09:00 - 20:00</span>
-            </div>
-            <div class="horaire-item">
-                <span class="jour">Vendredi</span>
-                <span class="heures">09:00 - 20:00</span>
-            </div>
-            <div class="horaire-item">
-                <span class="jour">Samedi</span>
-                <span class="heures">08:00 - 17:00</span>
-            </div>
-            <div class="horaire-item">
-                <span class="jour">Dimanche</span>
-                <span class="heures">Fermé</span>
-            </div>
-        </div>
-    </section>
-
     <!-- Contact -->
     <section id="contact">
         <h2>Contactez-nous</h2>
         <div class="contact-grid">
             <div class="contact-info">
-                <p><span class="contact-icon">🕐</span> Rendez-vous sur place ou par téléphone</p>
-                <p><span class="contact-icon">📍</span> Rue du Rhône 45, 1204 Genève</p>
-                <p><span class="contact-icon">📞</span> +41 079 123 45 67</p>
-                <p><span class="contact-icon">✉️</span> contact@elegance-coiffure.ch</p>
+                <span class="contact-link" aria-hidden="true" style="cursor:default;"><span class="contact-icon">🕐</span> Rendez-vous sur place ou par téléphone</span>
+                <a class="contact-link" href="https://www.google.com/maps?q=Rue+du+Rh%C3%B4ne+45,+1204+Gen%C3%A8ve" target="_blank" rel="noopener">
+                    <span class="contact-icon">📍</span> Rue du Rhône 45, 1204 Genève
+                </a>
+                <a class="contact-link" href="mailto:contact@elegance-coiffure.ch">
+                    <span class="contact-icon">✉️</span> contact@elegance-coiffure.ch
+                </a>
+                 <a class="contact-link" href="tel:+41791234567">
+                    <span class="contact-icon">📞</span> +41 079 123 45 67
+                </a>
             </div>
             <form>
                 <input type="text" placeholder="Votre nom" required>
@@ -710,7 +795,10 @@
 
     <!-- Footer -->
     <footer>
-        <p>© 2025 Élégance Coiffure - Tous droits réservés | <a href="#" style="color: #bdbdbd;">Mentions légales</a></p>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Elégance-coiffure. Tous droits réservés.</p>
+                <p class="footer-note">Site créé à des fins de démonstration par site-simple.ch</p>
+            </div>
     </footer>
 
     <script>
@@ -768,60 +856,28 @@
         showSlides(slideIndex);
         slideTimer = setTimeout(autoSlides, 4000);
 
-        const menuToggle = document.querySelector('.menu-toggle');
-        const navBackdrop = document.querySelector('.nav-backdrop');
-        const navLinks = document.querySelectorAll('#primary-menu a');
-        const nav = document.querySelector('nav');
-        const navList = document.getElementById('primary-menu');
-        const logo = document.querySelector('.logo');
+        const menuToggle = document.querySelector('.ss-nav-toggle');
+        const navBackdrop = document.querySelector('.ss-nav-backdrop');
+        const navLinks = document.querySelectorAll('.ss-nav__link');
+        const closeButton = document.querySelector('.ss-nav__close');
 
         function closeMobileMenu() {
-            document.body.classList.remove('nav-open');
-            if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
-        }
-
-        function evaluateNavLayout() {
-            if (!nav || !navList || !logo) return;
-            const wasCondensed = document.body.classList.contains('nav-condensed');
-            if (wasCondensed) document.body.classList.remove('nav-condensed');
-            const computedNav = window.getComputedStyle(nav);
-            const gap = parseFloat(computedNav.columnGap || computedNav.gap || '0') || 0;
-            const availableWidth = nav.clientWidth - logo.offsetWidth - gap;
-            const needsCollapse = navList.scrollWidth > availableWidth;
-            document.body.classList.toggle('nav-condensed', needsCollapse);
-            if (!needsCollapse) closeMobileMenu();
+            document.body.classList.remove('ss-nav-open');
+            menuToggle?.setAttribute('aria-expanded', 'false');
         }
 
         menuToggle?.addEventListener('click', () => {
-            const isOpen = document.body.classList.toggle('nav-open');
+            const isOpen = document.body.classList.toggle('ss-nav-open');
             menuToggle.setAttribute('aria-expanded', String(isOpen));
             if (isOpen) document.body.classList.remove('hide-header');
         });
 
         navBackdrop?.addEventListener('click', closeMobileMenu);
-
         navLinks.forEach(link => link.addEventListener('click', closeMobileMenu));
+        closeButton?.addEventListener('click', closeMobileMenu);
 
-        window.addEventListener('resize', evaluateNavLayout);
-        window.addEventListener('load', evaluateNavLayout);
-        evaluateNavLayout();
-
-        let lastScrollY = window.scrollY;
-
-        function updateHeaderVisibility() {
-            const currentY = window.scrollY;
-            const scrollingDown = currentY > lastScrollY;
-            const beyondThreshold = currentY > 120;
-            if (scrollingDown && beyondThreshold && !document.body.classList.contains('nav-open')) {
-                document.body.classList.add('hide-header');
-            } else {
-                document.body.classList.remove('hide-header');
-            }
-            lastScrollY = currentY;
-        }
-
-        window.addEventListener('scroll', () => {
-            window.requestAnimationFrame(updateHeaderVisibility);
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) closeMobileMenu();
         });
     </script>
 </body>
